@@ -53,6 +53,9 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "co
 import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
 
+// Protected routes wrapper
+import { ProtectedRoute } from "RouteWrapper";
+
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const {
@@ -116,6 +119,13 @@ export default function App() {
       }
 
       if (route.route) {
+        if (route.protected)
+          return (
+            <Route key={route.key} element={<ProtectedRoute />}>
+              <Route exact path={route.route} element={route.component} />
+            </Route>
+          );
+
         return <Route exact path={route.route} element={route.component} key={route.key} />;
       }
 

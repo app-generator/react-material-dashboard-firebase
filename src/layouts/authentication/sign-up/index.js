@@ -32,7 +32,25 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 // Images
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
 
+// Auth hook
+import { useFirebaseAuth } from "context/auth.context";
+
 function Cover() {
+  // states and functions
+  const { isSignedIn, signUp } = useFirebaseAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const handleEmail = ({ target: { value } }) => setEmail(value);
+  const handlePassword = ({ target: { value } }) => setPassword(value);
+  const handleSignUp = async () => {
+    setLoginError("");
+    const error = await signUp(email, password);
+    if (error) setLoginError(error);
+  };
+
+  if (isSignedIn) return <Navigate to="/dashboard" />;
+
   return (
     <CoverLayout image={bgImage}>
       <Card>
@@ -60,10 +78,24 @@ function Cover() {
               <MDInput type="text" label="Name" variant="standard" fullWidth />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="email" label="Email" variant="standard" fullWidth />
+              <MDInput
+                type="email"
+                label="Email"
+                variant="standard"
+                value={email}
+                onChange={handleEmail}
+                fullWidth
+              />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" variant="standard" fullWidth />
+              <MDInput
+                type="password"
+                label="Password"
+                variant="standard"
+                value={password}
+                onChange={handlePassword}
+                fullWidth
+              />
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Checkbox />
@@ -86,8 +118,15 @@ function Cover() {
                 Terms and Conditions
               </MDTypography>
             </MDBox>
+            {loginError && (
+              <MDBox mb={2}>
+                <MDTypography variant="p" fontWeight="medium" color="pink.600" mt={1}>
+                  {loginError}
+                </MDTypography>
+              </MDBox>
+            )}
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth>
+              <MDButton variant="gradient" color="info" onClick={handleSignUp} fullWidth>
                 sign in
               </MDButton>
             </MDBox>

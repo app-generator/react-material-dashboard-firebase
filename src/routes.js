@@ -56,6 +56,7 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/dashboard",
     component: <Dashboard />,
+    protected: true,
   },
   {
     type: "collapse",
@@ -64,6 +65,7 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/tables",
     component: <Tables />,
+    protected: true,
   },
   {
     type: "collapse",
@@ -72,6 +74,7 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/billing",
     component: <Billing />,
+    protected: true,
   },
   {
     type: "collapse",
@@ -80,6 +83,7 @@ const routes = [
     icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
     route: "/rtl",
     component: <RTL />,
+    protected: true,
   },
   {
     type: "collapse",
@@ -88,6 +92,7 @@ const routes = [
     icon: <Icon fontSize="small">notifications</Icon>,
     route: "/notifications",
     component: <Notifications />,
+    protected: true,
   },
   {
     type: "collapse",
@@ -96,6 +101,7 @@ const routes = [
     icon: <Icon fontSize="small">person</Icon>,
     route: "/profile",
     component: <Profile />,
+    protected: true,
   },
   {
     type: "collapse",

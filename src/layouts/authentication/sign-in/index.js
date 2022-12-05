@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 import { useState } from "react";
 
 // react-router-dom components
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -41,10 +41,26 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
-function Basic() {
-  const [rememberMe, setRememberMe] = useState(false);
+// Auth hook
+import { useFirebaseAuth } from "context/auth.context";
 
+function Basic() {
+  // states and functions
+  const { isSignedIn, signIn, googleSignIn } = useFirebaseAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const handleEmail = ({ target: { value } }) => setEmail(value);
+  const handlePassword = ({ target: { value } }) => setPassword(value);
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  const handleSignIn = async () => {
+    setLoginError("");
+    const error = await signIn(email, password);
+    if (error) setLoginError(error);
+  };
+
+  if (isSignedIn) return <Navigate to="/dashboard" />;
 
   return (
     <BasicLayout image={bgImage}>
@@ -75,7 +91,13 @@ function Basic() {
               </MDTypography>
             </Grid>
             <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
+              <MDTypography
+                component={MuiLink}
+                href="#"
+                variant="body1"
+                color="white"
+                onClick={googleSignIn}
+              >
                 <GoogleIcon color="inherit" />
               </MDTypography>
             </Grid>
@@ -84,10 +106,16 @@ function Basic() {
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput type="email" label="Email" fullWidth />
+              <MDInput type="email" label="Email" value={email} onChange={handleEmail} fullWidth />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" fullWidth />
+              <MDInput
+                type="password"
+                label="Password"
+                value={password}
+                onChange={handlePassword}
+                fullWidth
+              />
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -101,8 +129,15 @@ function Basic() {
                 &nbsp;&nbsp;Remember me
               </MDTypography>
             </MDBox>
+            {loginError && (
+              <MDBox mb={2}>
+                <MDTypography variant="p" fontWeight="medium" color="pink.600" mt={1}>
+                  {loginError}
+                </MDTypography>
+              </MDBox>
+            )}
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth>
+              <MDButton variant="gradient" color="info" onClick={handleSignIn} fullWidth>
                 sign in
               </MDButton>
             </MDBox>
